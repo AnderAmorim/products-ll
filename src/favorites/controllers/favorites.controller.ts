@@ -1,34 +1,51 @@
-import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Controller, Delete, Get, Post, UseGuards, Req, Body } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetFavoritesQuery } from '../queries/get-favorites.query';
 import { AddFavoriteCommand } from '../commands/add-favorite.command';
 import { RemoveFavoriteCommand } from '../commands/remove-favorite.command';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { ProductResponseDto } from '../dtos/product-response.dto';
+import { ApiOkResponse } from '@nestjs/swagger';
+import { LIST_PRODUCT_FAVORITES_SUCCESSFULLY } from '../../shared/constants/http-response-description';
+import { JwtUserDto } from '../dtos/jwt-user.dto';
+import { FavoritesResponseDto } from '../dtos/favorites-response.dto';
 
 @Controller('favorites')
+@UseGuards(JwtAuthGuard)
 export class FavoritesController {
   constructor(
     private readonly queryBus: QueryBus,
-    private readonly commandBus: CommandBus
+    private readonly commandBus: CommandBus,
   ) {}
 
-  @Get(':userId')
-  async getFavorites(@Param('userId') userId: number) {
-    return this.queryBus.execute(new GetFavoritesQuery(userId));
+  @Get()
+  @ApiOkResponse({
+    description: LIST_PRODUCT_FAVORITES_SUCCESSFULLY,
+    type: ProductResponseDto,
+    isArray: true,
+  })
+  async getFavorites(@Req() req: JwtUserDto): Promise<ProductResponseDto[]>  {
+    const user_id = req.user.id;
+    return this.queryBus.execute(new GetFavoritesQuery(user_id));
   }
 
-  @Post(':userId/:product_id')
+  @Post('')
   async addFavorite(
-    @Param('userId') userId: number,
-    @Param('product_id') product_id: number,
+    @Req() req: JwtUserDto,
+    @Body() body: FavoritesResponseDto
   ) {
-    return this.commandBus.execute(new AddFavoriteCommand(userId, product_id));
+    const user_id = req.user.id;
+    const product_id = body.product_id;
+    return this.commandBus.execute(new AddFavoriteCommand(user_id, product_id));
   }
 
-  @Delete(':userId/:product_id')
+  @Delete('')
   async removeFavorite(
-    @Param('userId') userId: number,
-    @Param('product_id') product_id: number,
+    @Req() req: JwtUserDto,
+    @Body() body: FavoritesResponseDto
   ) {
-    return this.commandBus.execute(new RemoveFavoriteCommand(userId, product_id));
+    const user_id = req.user.id;
+    const product_id = body.product_id;
+    return this.commandBus.execute(new RemoveFavoriteCommand(user_id, product_id));
   }
 }

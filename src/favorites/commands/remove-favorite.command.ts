@@ -1,3 +1,3 @@
 export class RemoveFavoriteCommand {
-  constructor(public readonly userId: number, public readonly productId: number) {}
+  constructor(public readonly user_id: number, public readonly productId: number) {}
 }

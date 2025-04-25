@@ -8,7 +8,7 @@ dotenv.config();
 console.log('Using connection string:', process.env.DATABASE_URL);
 
 let defaultPool = new Pool({
-  connectionString: process.env.DATABASE_URL.replace(/\/[^/]+$/, '/postgres'),
+  connectionString: process.env.DATABASE_URL,
 });
 
 async function ensureDatabaseExists() {
@@ -194,8 +194,6 @@ async function insertAdminUser() {
     await runMigrationUsers();
     await runMigrationUserAccessLevels();
     await runMigrationFavorites();
-
-    // Executa a inserção do usuário admin após as tabelas terem sido criadas
     await insertAdminUser();
   } catch (error) {
     console.error('Migration process failed:', error);

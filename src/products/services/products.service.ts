@@ -1,8 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { ProductResponseDto } from '../../favorites/dtos/product-response.dto';
 
 @Injectable()
 export class ProductsService {
-  private readonly products = [
+  private readonly products: ProductResponseDto[] = [
     {
       id: 1,
       title: 'Smartphone XYZ',
@@ -49,11 +50,11 @@ export class ProductsService {
     return this.products;
   }
 
-  getProductById(id: number) {
+  getProductById(id: number): ProductResponseDto {
     const product = this.products.find((product) => product.id === Number(id));
     if (!product) {
       throw new NotFoundException(`Product with id ${id} not found`);
     }
-    return product;
+    return product as ProductResponseDto;
   }
 }

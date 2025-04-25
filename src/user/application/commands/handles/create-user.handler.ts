@@ -14,12 +14,12 @@ export class CreateUserHandler implements ICommandHandler<CreateUserCommand> {
   ) {}
 
   async execute(command: CreateUserCommand): Promise<UserResponseDto> {
-    const { email, name } = command;
+    const { email, name, password } = command;
     const userExists = await this.getUserByEmailService.getUserByEmail(email);
 
     if (userExists) {
       throw new BadRequestException(EMAIL_ALREADY_REGISTERED_ERROR);
     }
-    return this.createUserService.createUser(email, name);
+    return this.createUserService.createUser(email, name, password);
   }
 }

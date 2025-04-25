@@ -18,6 +18,7 @@ export class GetUserByEmailService {
       id: user.id,
       email: user.email,
       name: user.name,
+      scope: user.scope,
     };
   }
 }

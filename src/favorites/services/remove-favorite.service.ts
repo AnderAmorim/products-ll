@@ -8,7 +8,7 @@ export class RemoveFavoriteService {
     private readonly favoritesRepository: IFavoritesRepository,
   ) {}
 
-  async execute(userId: number, productId: number): Promise<void> {
-    await this.favoritesRepository.removeFavorite(userId, productId);
+  async execute(user_id: number, productId: number): Promise<void> {
+    await this.favoritesRepository.removeFavorite(user_id, productId);
   }
 }

@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Get, HttpStatus, Param, Put, Delete, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, Get, HttpStatus, Param, Put, Delete, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiTags, ApiBody, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserDto } from '../dto/creater-user.dto';
@@ -11,7 +11,12 @@ import { GetUserByEmailQuery } from '../application/queries/get-user-by-email.qu
 import { EMAIL_ALREADY_REGISTERED_ERROR, GET_USER_SUCCESSFULLY, LIST_USERS_ERROR, LIST_USERS_SUCCESSFULLY, USER_CREATED_SUCCESSFULLY, USER_DELETED_SUCCESSFULLY, USER_NOT_FOUND, USER_UPDATED_SUCCESSFULLY } from '../../shared/constants/http-response-description';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { DecodeUriPipe } from '../../shared/pipes/decode-uri.pipe';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
+import { JoiValidationPipe } from '../../shared/pipes/joi-validation.pipe';
+import { CreateUserSchema } from '../schemas/create-user.schema';
+import { UpdateUserSchema } from '../schemas/update-user.schema';
+import { SetScope } from '../../shared/decorators/set-scope';
+import { ScopesEnum } from '../../shared/enums/scopes.enum';
 
 @ApiTags('users')
 @UseGuards(JwtAuthGuard)
@@ -32,12 +37,14 @@ export class UserController {
     status: HttpStatus.BAD_REQUEST,
     description: EMAIL_ALREADY_REGISTERED_ERROR,
   })
+  @UsePipes(new JoiValidationPipe(CreateUserSchema))
   async register(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    const { email, name } = createUserDto;
-    return this.commandBus.execute(new CreateUserCommand(email, name));
+    const { email, name, password } = createUserDto;
+    return this.commandBus.execute(new CreateUserCommand(email, name, password));
   }
 
   @Get('')
+  @SetScope(ScopesEnum.admin)
   @ApiOkResponse({ type: UserResponseDto, isArray: true, description: LIST_USERS_SUCCESSFULLY })
   @ApiResponse({
     status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -48,27 +55,30 @@ export class UserController {
   }
 
   @Get(':email')
+  @SetScope(ScopesEnum.admin)
   @ApiOkResponse({ type: UserResponseDto, description: GET_USER_SUCCESSFULLY })
   async getByEmail(@Param('email', DecodeUriPipe) email: string): Promise<UserResponseDto> {
     return this.queryBus.execute(new GetUserByEmailQuery(email));
   }
 
-  @Put(':email')
+  @Put('')
+  @SetScope(ScopesEnum.admin)
   @ApiOkResponse({ description: USER_UPDATED_SUCCESSFULLY })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: USER_NOT_FOUND,
   })
   @ApiBody({ type: UpdateUserDto })
+  @UsePipes(new JoiValidationPipe(UpdateUserSchema))
   async update(
-    @Param('email', DecodeUriPipe) email: string,
     @Body() body: UpdateUserDto,
   ): Promise<UserResponseDto> {
-    const { name } = body;
+    const { name, email } = body;
     return this.commandBus.execute(new UpdateUserCommand(email, name));
   }
 
   @Delete(':email')
+  @SetScope(ScopesEnum.admin)
   @ApiOkResponse({ description: USER_DELETED_SUCCESSFULLY })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,

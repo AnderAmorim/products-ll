@@ -1,3 +1,3 @@
 export class GetFavoritesQuery {
-  constructor(public readonly userId: number) {}
+  constructor(public readonly user_id: number) {}
 }

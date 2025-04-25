@@ -23,6 +23,7 @@ export class UpdateUserHandler implements ICommandHandler<UpdateUserCommand> {
       id: updatedUser.id,
       email: updatedUser.email,
       name: updatedUser.name,
-    }
+      scope: updatedUser.scope,
+    };
   }
 }

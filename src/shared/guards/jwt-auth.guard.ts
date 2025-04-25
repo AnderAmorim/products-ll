@@ -1,4 +1,4 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Global } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, ForbiddenException, Global } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {
   AUTHORIZATION_HEADER_NOT_FOUND,
@@ -27,9 +27,21 @@ export class JwtAuthGuard implements CanActivate {
     try {
       const decoded = this.jwtService.verify(token);
       request.user = decoded;
+
+      const requiredScope = this.getRequiredScope(context);
+      if (requiredScope && decoded.scope !== requiredScope) {
+        throw new ForbiddenException(`Access denied: Requires ${requiredScope} scope`);
+      }
+
       return true;
     } catch (error) {
       throw new UnauthorizedException(INVALID_OR_EXPIRED_ACCESS_TOKEN);
     }
+  }
+
+  private getRequiredScope(context: ExecutionContext): string | null {
+    const handler = context.getHandler();
+    const requiredScope = Reflect.getMetadata('requiredScope', handler);
+    return requiredScope || null;
   }
 }

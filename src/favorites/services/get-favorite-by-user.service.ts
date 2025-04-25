@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { IFavoritesRepository, IFavoritesRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/favorites.repository';
+import { FavoritesResponseDto } from '../dtos/favorites-response.dto';
 
 @Injectable()
 export class GetFavoriteByUserService {
@@ -8,7 +9,7 @@ export class GetFavoriteByUserService {
     private readonly favoritesRepository: IFavoritesRepository,
   ) {}
 
-  async execute(userId: number, product_id: number): Promise<any | null> {
-    return this.favoritesRepository.findFavorite(userId, product_id);
+  async execute(user_id: number, product_id: number): Promise<FavoritesResponseDto | null> {
+    return this.favoritesRepository.findFavorite(user_id, product_id);
   }
 }

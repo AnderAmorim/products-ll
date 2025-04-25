@@ -1,7 +1,9 @@
+import { FavoritesResponseDto } from "../../../../favorites/dtos/favorites-response.dto";
+
 export interface IFavoritesRepository {
-  list(userId: number): Promise<any | null>;
-  addFavorite(userId: number, product_id: number): Promise<any | null>;
-  findFavorite(userId: number, product_id: number): Promise<any | null>;
-  removeFavorite(userId: number, product_id: number): Promise<any | null>;
+  list(user_id: number): Promise<FavoritesResponseDto[] | null>;
+  addFavorite(user_id: number, product_id: number): Promise<FavoritesResponseDto | null>;
+  findFavorite(user_id: number, product_id: number): Promise<FavoritesResponseDto | null>;
+  removeFavorite(user_id: number, product_id: number): Promise<void>;
 }
 export const IFavoritesRepositoryToken = Symbol('IFavoritesRepository');

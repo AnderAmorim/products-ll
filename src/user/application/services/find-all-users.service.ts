@@ -22,6 +22,7 @@ export class FindAllUsersService {
       id: user.id,
       name: user.name,
       email: user.email,
+      scope: user.scope,
     }));
 
   }
