@@ -1,0 +1,14 @@
+export const USER_CREATED_SUCCESSFULLY = 'User created successfully';
+export const LIST_USERS_SUCCESSFULLY = 'Users listed successfully';
+export const GET_USER_SUCCESSFULLY = 'User found successfully';
+export const USER_NOT_FOUND = 'User not found';
+export const EMAIL_ALREADY_REGISTERED_ERROR = 'Email already registered';
+export const LIST_USERS_ERROR = 'Error listing users';
+export const LOGIN_SUCCESSFULLY = 'Login successfully';
+export const INVALID_CREDENTIALS_ERROR = 'Invalid credentials';
+export const USER_DELETED_SUCCESSFULLY = 'User deleted successfully';
+export const USER_UPDATED_SUCCESSFULLY = 'User updated successfully';
+export const AUTHORIZATION_HEADER_NOT_FOUND = 'Authorization header not found';
+export const ACCESS_TOKEN_NOT_PROVIDED = 'Access token not provided';
+export const INVALID_OR_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token';
+export const PRODUCT_ALREADY_REGISTERED_TO_FAVORITE = 'Product is already added to favorites';

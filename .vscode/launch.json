@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "name": "Launch product-ll-api",
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**",
+      ],
+      "request": "launch",
+      "type": "node-terminal",
+      "command": "npm run start:dev"
+    },
+  ]
+}
