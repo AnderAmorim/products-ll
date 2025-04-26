@@ -2,11 +2,12 @@ import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { AddFavoriteCommand } from '../add-favorite.command';
 import { AddFavoritesService } from '../../services/add-favorite.service';
 import { ProductsService } from '../../../products/services/products.service';
-import { NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 import { GetFavoriteByUserService } from '../../services/get-favorite-by-user.service';
 import { EnricherFavoriteService } from '../../services/enricher-favorite.service';
 import { ProductResponseDto } from '../../dtos/product-response.dto';
 import { GetFavoritesAndUpdateCacheService } from '../../services/get-favorites-and-update-cache.service';
+import { PRODUCT_ALREADY_REGISTERED_TO_FAVORITE } from '../../../shared/constants/http-response-description';
 
 @CommandHandler(AddFavoriteCommand)
 export class AddFavoriteHandler implements ICommandHandler<AddFavoriteCommand> {
@@ -28,7 +29,10 @@ export class AddFavoriteHandler implements ICommandHandler<AddFavoriteCommand> {
 
     const isAlreadyFavorite = await this.getFavoriteByUserService.execute(user_id, product_id);
     if (isAlreadyFavorite) {
-      return true; // retornar ok, produto já adicionado
+      throw new HttpException(
+        { statusCode: HttpStatus.OK, message: PRODUCT_ALREADY_REGISTERED_TO_FAVORITE },
+        HttpStatus.OK,
+      );
     }
     
     await this.addFavoritesService.addFavorite(user_id, product_id);

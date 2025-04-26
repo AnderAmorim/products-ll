@@ -3,6 +3,7 @@ import { FavoritesResponseDto } from '../dtos/favorites-response.dto';
 import { ERROR_ON_LIST_FAVORITE_PRODUCT } from '../../shared/constants/http-response-description';
 import { IFavoritesRepository, IFavoritesRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/relational/favorites.repository';
 import { IFavoritesCacheRepository, IFavoritesCacheRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/cache/favorites-cache.interface';
+import { ILogging, ILoggingToken } from '../../shared/providers/logging';
 
 @Injectable()
 export class GetFavoritesAndUpdateCacheService {
@@ -12,6 +13,9 @@ export class GetFavoritesAndUpdateCacheService {
 
     @Inject(IFavoritesCacheRepositoryToken)
     private readonly favoritesCacheRepository: IFavoritesCacheRepository,
+
+    @Inject(ILoggingToken)
+    private readonly logger: ILogging,
   ) {}
 
   async execute(user_id: number): Promise<FavoritesResponseDto[]> {
@@ -22,7 +26,7 @@ export class GetFavoritesAndUpdateCacheService {
     }
 
     await this.favoritesCacheRepository.cacheFavorites(user_id, allFavorites);
-    console.log('Cache updated!');
+    this.logger.info('Cache updated!');
 
     return allFavorites;
   }

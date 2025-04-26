@@ -10,6 +10,12 @@ import { JWT_EXPIRATION_TIME, JWT_SECRET } from './shared/constants/env';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ProductsModule } from './products/products.module';
 import { RepositoriesCacheModule } from './shared/infraestructure/repositories/repositories-cache.module';
+import { LoggingModule } from './shared/providers/logging';
+import { WinstonModule } from 'nest-winston';
+import { winstonConfig } from './shared/config/winston.config';
+import { StorageContextModule } from './shared/providers/context';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { EnricherLogInterceptor } from './shared/interceptors/enricher-log.interceptor';
 
 @Module({
   imports: [
@@ -26,8 +32,18 @@ import { RepositoriesCacheModule } from './shared/infraestructure/repositories/r
       secret: JWT_SECRET,
       signOptions: { expiresIn: JWT_EXPIRATION_TIME },
     }),
+    StorageContextModule,
+    WinstonModule.forRoot(winstonConfig),
+    LoggingModule,
   ],
   controllers: [],
-  providers: [DecodeUriPipe, JwtAuthGuard],
+  providers: [
+    DecodeUriPipe,
+    JwtAuthGuard,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: EnricherLogInterceptor,
+    },
+  ],
 })
 export class AppModule {}

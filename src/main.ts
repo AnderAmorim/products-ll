@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PORT } from './shared/constants/env';
+import * as winston from 'winston';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,6 +22,8 @@ async function bootstrap() {
 
   const port = PORT || 3002;
   console.log(`Server running on port ${port}`);
+  const logger = app.get<winston.Logger>(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
   await app.listen(port);
 }
 bootstrap();
