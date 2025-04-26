@@ -56,3 +56,9 @@ Para obter o token, você deve utilizar a rota `/auth/login`, passando as creden
 
 ## Recursos relacionados aos produtos favoritos
 Os recursos relacionados aos produtos favoritos estão disponíveis nas rotas `/favorites` e utiliza o token de autenticação do usuário que está logado para relacionar os produtos favoritos ao usuário. Então, caso seja passado o token do usuário de id 1, serão listados os produtos favoritos do usuário de id 1.
+
+# Próximos passos
+
+### Maior cobertura de testes
+### RefreshToken
+### Rota para invalidar cache
