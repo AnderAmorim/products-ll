@@ -29,6 +29,7 @@ export class AddFavoriteHandler implements ICommandHandler<AddFavoriteCommand> {
 
     const isAlreadyFavorite = await this.getFavoriteByUserService.execute(user_id, product_id);
     if (isAlreadyFavorite) {
+      
       throw new HttpException(
         { statusCode: HttpStatus.OK, message: PRODUCT_ALREADY_REGISTERED_TO_FAVORITE },
         HttpStatus.OK,

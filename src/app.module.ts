@@ -16,6 +16,7 @@ import { winstonConfig } from './shared/config/winston.config';
 import { StorageContextModule } from './shared/providers/context';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { EnricherLogInterceptor } from './shared/interceptors/enricher-log.interceptor';
+import { LogInterceptor } from './shared/interceptors/log.interceptor';
 
 @Module({
   imports: [
@@ -44,6 +45,10 @@ import { EnricherLogInterceptor } from './shared/interceptors/enricher-log.inter
       provide: APP_INTERCEPTOR,
       useClass: EnricherLogInterceptor,
     },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LogInterceptor,
+    }
   ],
 })
 export class AppModule {}
