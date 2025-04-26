@@ -12,6 +12,7 @@ import { RemoveFavoriteHandler } from './commands/handlers/remove-favorite.handl
 import { RemoveFavoriteService } from './services/remove-favorite.service';
 import { JwtModule } from '@nestjs/jwt';
 import { JWT_EXPIRATION_TIME } from '../shared/constants/env';
+import { GetFavoritesAndUpdateCacheService } from './services/get-favorites-and-update-cache.service';
 
 @Module({
   imports: [
@@ -35,6 +36,8 @@ import { JWT_EXPIRATION_TIME } from '../shared/constants/env';
 
     RemoveFavoriteHandler,
     RemoveFavoriteService,
+
+    GetFavoritesAndUpdateCacheService,
   ],
 })
 export class FavoritesModule {}

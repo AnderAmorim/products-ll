@@ -1,18 +1,32 @@
-version: '3.9'
+version: '3.8'
 
 services:
-  postgres:
+
+  db:
     image: postgres:15
-    container_name: postgres
+    container_name: postgres-db
     restart: always
     environment:
       POSTGRES_USER: product_api
       POSTGRES_PASSWORD: product_api
-      POSTGRES_DB: product_api
+      POSTGRES_DB: products_db
     ports:
       - "5432:5432"
     volumes:
       - pg_data:/var/lib/postgresql/data
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: products-api
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV
+      - JWT_SECRET
+      - DATABASE_URL
+    depends_on:
+      - db
 
   redis:
     image: redis:7
@@ -22,13 +36,6 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
-
-  adminer:
-    image: adminer
-    container_name: adminer
-    restart: always
-    ports:
-      - "8080:8080"
 
 volumes:
   pg_data:

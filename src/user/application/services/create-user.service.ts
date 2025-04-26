@@ -7,7 +7,7 @@ import * as bcrypt from 'bcrypt';
 import {
   IUserRepository,
   IUserRepositoryToken,
-} from '../../../shared/infraestructure/repositories/interfaces/user.repository';
+} from '../../../shared/infraestructure/repositories/interfaces/relational/user.repository';
 import { UserResponseDto } from '../../dto/user-response.dto';
 import { INVALID_CREDENTIALS_ERROR } from '../../../shared/constants/http-response-description';
 

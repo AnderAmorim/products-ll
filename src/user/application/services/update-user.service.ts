@@ -1,5 +1,5 @@
 import { Injectable, BadRequestException, Inject } from '@nestjs/common';
-import { IUserRepository, IUserRepositoryToken } from '../../../shared/infraestructure/repositories/interfaces/user.repository';
+import { IUserRepository, IUserRepositoryToken } from '../../../shared/infraestructure/repositories/interfaces/relational/user.repository';
 import { USER_NOT_FOUND, USER_UPDATED_SUCCESSFULLY } from '../../../shared/constants/http-response-description';
 
 @Injectable()

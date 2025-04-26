@@ -1,12 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Pool } from 'pg';
-import { IFavoritesRepository } from '../interfaces/favorites.repository';
+import { IFavoritesRepository } from '../interfaces/relational/favorites.repository';
 import { FavoritesResponseDto } from '../../../../favorites/dtos/favorites-response.dto';
+import { PG_POOL } from './pg.module';
 
 @Injectable()
 export class FavoritesRepository implements IFavoritesRepository {
   constructor(
-    @Inject('PG_POOL')
+    @Inject(PG_POOL)
     private readonly pool: Pool,
   ) {}
 
@@ -30,7 +31,7 @@ export class FavoritesRepository implements IFavoritesRepository {
     return result.rows[0];
   }
 
-  async findFavorite(user_id: number, product_id: number): Promise<any | null> {
+  async findFavorite(user_id: number, product_id: number): Promise<FavoritesResponseDto | null> {
     const query = `
       SELECT * FROM favorites
       WHERE user_id = $1 AND product_id = $2

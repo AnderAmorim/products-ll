@@ -13,5 +13,7 @@ export const ACCESS_TOKEN_NOT_PROVIDED = 'Access token not provided';
 export const INVALID_OR_EXPIRED_ACCESS_TOKEN = 'Invalid or expired access token';
 export const PRODUCT_ALREADY_REGISTERED_TO_FAVORITE = 'Product is already added to favorites';
 export const LIST_PRODUCT_FAVORITES_SUCCESSFULLY = 'Product favorites listed successfully';
+export const ERROR_ON_LIST_FAVORITE_PRODUCT = 'Error listing products';
+export const ADD_FAVORITE_PRODUCT_SUCCESSFULLY = 'Product added to favorites successfully';
 export const ERROR_ON_ADD_FAVORITE_PRODUCT = 'Error adding product to favorites';
 export const REMOVE_PRODUCT_FAVORITE_SUCCESSFULLY = 'Product removed from favorites successfully';

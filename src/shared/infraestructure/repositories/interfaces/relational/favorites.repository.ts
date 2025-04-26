@@ -1,4 +1,4 @@
-import { FavoritesResponseDto } from "../../../../favorites/dtos/favorites-response.dto";
+import { FavoritesResponseDto } from "../../../../../favorites/dtos/favorites-response.dto";
 
 export interface IFavoritesRepository {
   list(user_id: number): Promise<FavoritesResponseDto[] | null>;

@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { IFavoritesRepository, IFavoritesRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/favorites.repository';
+import { IFavoritesRepository, IFavoritesRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/relational/favorites.repository';
 
 @Injectable()
 export class RemoveFavoriteService {

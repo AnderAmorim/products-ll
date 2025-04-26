@@ -1,11 +1,12 @@
 import { Global, Module } from '@nestjs/common';
 import { Pool } from 'pg';
 
+export const PG_POOL = 'PG_POOL';
 @Global()
 @Module({
   providers: [
     {
-      provide: 'PG_POOL',
+      provide: PG_POOL,
       useFactory: async () => {
         return new Pool({
           connectionString: process.env.DATABASE_URL,
@@ -13,6 +14,6 @@ import { Pool } from 'pg';
       },
     },
   ],
-  exports: ['PG_POOL'],
+  exports: [PG_POOL],
 })
 export class PgModule {}

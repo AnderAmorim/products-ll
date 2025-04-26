@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import {
   IUserRepository,
   IUserRepositoryToken,
-} from '../../../shared/infraestructure/repositories/interfaces/user.repository';
+} from '../../../shared/infraestructure/repositories/interfaces/relational/user.repository';
 import { UserResponseDto } from '../../dto/user-response.dto';
 
 @Injectable()

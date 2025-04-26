@@ -1,4 +1,4 @@
-import { UserResponseDto } from "../../../../user/dto/user-response.dto";
+import { UserResponseDto } from "../../../../../user/dto/user-response.dto";
 
 export interface IUserRepository {
   create(email: string, name: string, password: string): Promise<UserResponseDto>;

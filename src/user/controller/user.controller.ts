@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Get, HttpStatus, Param, Put, Delete, UseGuards, UsePipes } from '@nestjs/common';
-import { ApiTags, ApiBody, ApiOkResponse, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiBody, ApiOkResponse, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { CreateUserDto } from '../dto/creater-user.dto';
 import { UserResponseDto } from '../dto/user-response.dto';
@@ -17,8 +17,11 @@ import { CreateUserSchema } from '../schemas/create-user.schema';
 import { UpdateUserSchema } from '../schemas/update-user.schema';
 import { SetScope } from '../../shared/decorators/set-scope';
 import { ScopesEnum } from '../../shared/enums/scopes.enum';
+import { DeleteUserDto } from '../dto/delete-user.dto';
+import { DeleteUserSchema } from '../schemas/delete-user.schema';
 
 @ApiTags('users')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UserController {
@@ -77,14 +80,19 @@ export class UserController {
     return this.commandBus.execute(new UpdateUserCommand(email, name));
   }
 
-  @Delete(':email')
+  @Delete('')
   @SetScope(ScopesEnum.admin)
   @ApiOkResponse({ description: USER_DELETED_SUCCESSFULLY })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
     description: USER_NOT_FOUND,
   })
-  async delete(@Param('email', DecodeUriPipe) email: string): Promise<UserResponseDto> {
+  @ApiBody({ type: DeleteUserDto })
+  @UsePipes(new JoiValidationPipe(DeleteUserSchema))
+  async delete(
+    @Body() body: DeleteUserDto
+  ): Promise<UserResponseDto> {
+    const { email } = body;
     return this.commandBus.execute(new DeleteUserCommand(email));
   }
 }

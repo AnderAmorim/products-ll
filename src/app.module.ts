@@ -9,10 +9,12 @@ import { JwtAuthGuard } from './shared/guards/jwt-auth.guard';
 import { JWT_EXPIRATION_TIME, JWT_SECRET } from './shared/constants/env';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ProductsModule } from './products/products.module';
+import { RepositoriesCacheModule } from './shared/infraestructure/repositories/repositories-cache.module';
 
 @Module({
   imports: [
     RepositoriesModule,
+    RepositoriesCacheModule,
     AuthModule,
     UserModule,
     FavoritesModule,

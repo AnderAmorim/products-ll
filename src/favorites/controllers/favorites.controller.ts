@@ -6,7 +6,7 @@ import { RemoveFavoriteCommand } from '../commands/remove-favorite.command';
 import { JwtAuthGuard } from '../../shared/guards/jwt-auth.guard';
 import { ProductResponseDto } from '../dtos/product-response.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { LIST_PRODUCT_FAVORITES_SUCCESSFULLY } from '../../shared/constants/http-response-description';
+import { ADD_FAVORITE_PRODUCT_SUCCESSFULLY, LIST_PRODUCT_FAVORITES_SUCCESSFULLY } from '../../shared/constants/http-response-description';
 import { JwtUserDto } from '../dtos/jwt-user.dto';
 import { FavoritesResponseDto } from '../dtos/favorites-response.dto';
 
@@ -30,10 +30,15 @@ export class FavoritesController {
   }
 
   @Post('')
+  @ApiOkResponse({
+    description: ADD_FAVORITE_PRODUCT_SUCCESSFULLY,
+    type: ProductResponseDto,
+    isArray: true,
+  })
   async addFavorite(
     @Req() req: JwtUserDto,
-    @Body() body: FavoritesResponseDto
-  ) {
+    @Body() body: FavoritesResponseDto,
+  ) : Promise<ProductResponseDto[] | true> {
     const user_id = req.user.id;
     const product_id = body.product_id;
     return this.commandBus.execute(new AddFavoriteCommand(user_id, product_id));

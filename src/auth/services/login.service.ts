@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { IUserRepository, IUserRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/user.repository';
+import { IUserRepository, IUserRepositoryToken } from '../../shared/infraestructure/repositories/interfaces/relational/user.repository';
 import { LoginResponseDto } from '../dto/login-response.dto';
 import { UserResponseDto } from '../../user/dto/user-response.dto';
 

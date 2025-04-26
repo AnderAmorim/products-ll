@@ -1,14 +1,15 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Pool } from 'pg';
-import { IUserRepository } from '../interfaces/user.repository';
+import { IUserRepository } from '../interfaces/relational/user.repository';
 import { USER_NOT_FOUND } from '../../../constants/http-response-description';
 import * as bcrypt from 'bcrypt';
 import { UserResponseDto } from '../../../../user/dto/user-response.dto';
+import { PG_POOL } from './pg.module';
 
 @Injectable()
 export class UserRepositoryPostgres implements IUserRepository {
   constructor(
-    @Inject('PG_POOL')
+    @Inject(PG_POOL)
     private readonly pool: Pool,
   ) {}
 
