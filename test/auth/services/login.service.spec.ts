@@ -10,6 +10,14 @@ jest.mock('bcrypt', () => ({
   compare: jest.fn(),
 }));
 
+const mockUser: UserResponseDto = {
+  id: 1,
+  name: 'John Doe',
+  email: 'john.doe@example.com',
+  password: 'hashedPassword',
+  scope: 'user',
+}
+
 describe('LoginService', () => {
   let loginService: LoginService;
   let userRepository: jest.Mocked<IUserRepository>;
@@ -41,18 +49,12 @@ describe('LoginService', () => {
 
   describe('validateUser', () => {
     it('should return the user if email and password are valid', async () => {
-      const mockUser: UserResponseDto = {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        password: 'hashedPassword',
-        scope: 'user',
-      };
-
+      if(!mockUser.password) {
+        throw new Error('Password is required');
+      }
       (bcrypt.compare as jest.Mock).mockResolvedValue(true);
       userRepository.findByEmail.mockResolvedValue(mockUser);
-
-      const result = await loginService.validateUser('john.doe@example.com', 'password');
+      const result = await loginService.validateUser(mockUser.email, mockUser.password);
       expect(result).toEqual(mockUser);
       expect(userRepository.findByEmail).toHaveBeenCalledWith('john.doe@example.com');
     });
@@ -68,12 +70,6 @@ describe('LoginService', () => {
 
   describe('login', () => {
     it('should return an access token for a valid user', async () => {
-      const mockUser: UserResponseDto = {
-        id: 1,
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        scope: 'user',
-      };
 
       const mockToken = 'mockAccessToken';
       jwtService.sign.mockReturnValue(mockToken);
