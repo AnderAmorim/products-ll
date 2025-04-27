@@ -4,7 +4,6 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { PORT } from './shared/constants/env';
 import * as winston from 'winston';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
@@ -21,9 +20,11 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document);
 
   const port = PORT || 3002;
+  const host = process.env.HOST || '0.0.0.0'; // Host configurável via variável de ambiente
   console.log(`Server running on port ${port}`);
   const logger = app.get<winston.Logger>(WINSTON_MODULE_NEST_PROVIDER);
   app.useLogger(logger);
-  await app.listen(port);
+  await app.listen(port, host);
+  console.log(`Server running on http://${host}:${port}`);
 }
 bootstrap();

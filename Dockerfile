@@ -1,23 +1,16 @@
-FROM node:22 AS builder
-
-WORKDIR /app
-
-COPY package*.json ./
-COPY *.json /app/
-COPY src ./src
-
-RUN npm i -g pnpm
-RUN pnpm i
-RUN pnpm run build
-
 FROM node:22
 
 WORKDIR /app
 
-COPY --from=builder /app/package*.json ./
-COPY --from=builder /app/dist ./dist
+COPY package*.json ./
+COPY *.json ./
 
-RUN npm install --only=production --legacy-peer-deps
+RUN npm i -g pnpm && pnpm install
+
+COPY src ./src
+COPY tsconfig*.json ./
+
+RUN pnpm run build
 
 EXPOSE 3002
 

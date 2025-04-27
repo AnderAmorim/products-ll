@@ -7,21 +7,25 @@ dotenv.config();
 
 console.log('Using connection string:', process.env.DATABASE_URL);
 
-let defaultPool = new Pool({
+const adminPool = new Pool({
+  connectionString: process.env.DATABASE_URL.replace(/\/[^/]+$/, '/postgres'), // Conecta ao banco "postgres"
+});
+
+const defaultPool = new Pool({
   connectionString: process.env.DATABASE_URL,
 });
 
 async function ensureDatabaseExists() {
   const dbName = 'product_api';
   try {
-    const result = await defaultPool.query(
+    const result = await adminPool.query(
       `SELECT 1 FROM pg_database WHERE datname = $1`,
       [dbName],
     );
 
     if (result.rowCount === 0) {
       console.log(`Database "${dbName}" does not exist. Creating...`);
-      await defaultPool.query(`CREATE DATABASE ${dbName}`);
+      await adminPool.query(`CREATE DATABASE ${dbName}`);
       console.log(`Database "${dbName}" created successfully.`);
     } else {
       console.log(`Database "${dbName}" already exists.`);
@@ -61,7 +65,6 @@ async function runMigrationUsers() {
       await defaultPool.query(createTableQuery);
       console.log('Table "users" created successfully.');
     }
-    
   } catch (error) {
     console.error('Error running migration for "users":', error);
     throw error;
@@ -149,6 +152,12 @@ async function runMigrationFavorites() {
 }
 
 async function insertAdminUser() {
+  const checkUserExistsQuery = `
+    SELECT EXISTS (
+      SELECT 1 FROM users WHERE email = $1
+    );
+  `;
+
   const insertInitialUserQuery = `
     INSERT INTO users (id, email, name, password)
     VALUES ($1, $2, $3, $4)
@@ -173,6 +182,15 @@ async function insertAdminUser() {
     if (!initialUserPassword) {
       throw new Error('ADMIN_PASSWORD environment variable is not set.');
     }
+
+    const userExistsResult = await defaultPool.query(checkUserExistsQuery, [initialUserEmail]);
+    const userExists = userExistsResult.rows[0].exists;
+
+    if (userExists) {
+      console.log(`Admin user with email ${initialUserEmail} already exists. Skipping creation.`);
+      return;
+    }
+
     const hashedPassword = await bcrypt.hash(initialUserPassword, 10);
     const initialUserName = 'Admin';
 
@@ -198,6 +216,7 @@ async function insertAdminUser() {
   } catch (error) {
     console.error('Migration process failed:', error);
   } finally {
+    await adminPool.end();
     await defaultPool.end();
   }
 })();

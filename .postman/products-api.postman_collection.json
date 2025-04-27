@@ -46,7 +46,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"admin\",\n    \"password\":\"admin\"//,\n    // \"email\":\"anderson.amorim@exemple.com\",\n    // \"password\":\"123456\"\n}",
+							"raw": "{\n    \"email\":\"admin@admin.com\",\n    \"password\":\"admin\"//,\n    // \"email\":\"anderson.amorim@exemple.com\",\n    // \"password\":\"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -90,7 +90,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"teste@teste.com\",\n    \"password\":\"123456\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -242,7 +242,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\":\"teste@teste.com\",\n    \"password\":\"123456\"\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -278,7 +278,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"product_id\":2\n}",
+							"raw": "{\n  \"product_id\":3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
